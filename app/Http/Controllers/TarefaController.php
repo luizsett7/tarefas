@@ -49,8 +49,10 @@ class TarefaController extends Controller
 
     public function editar_tarefa(Request $request, $id)
     { 
+        $users = User::all();  
+        $id_user = $request->route('id');
         $tarefa = Tarefa::find($request->route('id'));
-        return view('tarefas.editar_tarefa')->with('tarefa', $tarefa);
+        return view('tarefas.editar_tarefa')->with('tarefa', $tarefa)->with('users',$users)->with('id_user',$id_user);
     }
 
     public function nova_tarefa(){
@@ -99,7 +101,7 @@ class TarefaController extends Controller
      */
     public function edit($id)
     {
-        //
+
     }
 
     /**
@@ -109,9 +111,10 @@ class TarefaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(TarefaRequest $request, $id)
     {
-        //
+        Tarefa::find($id)->update($request->all());
+        return redirect()->route('lista_tarefa');
     }
 
     /**

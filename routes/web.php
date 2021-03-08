@@ -21,13 +21,15 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::post('editar_tarefa/{id}', [TarefaController::class, 'editar_tarefa'])->name('editar_tarefa');
-
 Route::get('admin/home', [HomeController::class, 'adminHome'])->name('admin.home')->middleware('is_admin');
 
 Route::get('home', [HomeController::class, 'index'])->name('home');
 
 Route::get('nova_tarefa', [TarefaController::class, 'nova_tarefa'])->name('nova_tarefa');
+
+Route::get('editar_tarefa/{id}', [TarefaController::class, 'editar_tarefa'])->name('editar_tarefa');
+
+Route::post('update/{id}', [TarefaController::class, 'update'])->name('update');
 
 Route::get('lista_tarefa', [TarefaController::class, 'index'])->name('lista_tarefa');
 

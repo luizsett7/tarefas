@@ -48,7 +48,7 @@
                                     </select>  
                                 </td>
                                 <td style="text-align: center"><a href="#" onclick="openModal('{{ $tarefa->id }}')"><i class="fas fa-info"></i></a></td>
-                                <td style="text-align: center"><i class="fas fa-pencil-alt"></i></td>
+                                <td style="text-align: center"><a href="#" onclick="alterar_tarefa('{{ $tarefa->id }}')"><i class="fas fa-pencil-alt"></i></a></td>
                                 <td style="text-align: center"><a href="#" onclick="deletar_tarefa('{{ $tarefa->id }}')"><i class="far fa-trash-alt"></i></a></td>
                             </tr>
                         @endforeach
@@ -85,10 +85,13 @@
   </div>
   <script>
     $(document).ready(function(){
-        $('#dono_id').on('change', function() {
+        $('#dono_id').on('change', function() {            
             window.location.href = "http://localhost:8000/tarefa_colaborador/"+this.value;
         });              
     });
+    function alterar_tarefa(id_tarefa){        
+        window.location.href = "http://localhost:8000/editar_tarefa/"+id_tarefa;
+    }
     function deletar_tarefa(id_tarefa){  
         Swal.fire({
             title: 'Você está certo disso?',
