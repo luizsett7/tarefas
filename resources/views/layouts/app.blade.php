@@ -12,6 +12,7 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -28,6 +29,12 @@
                 <a class="navbar-brand" href="{{ url('/') }}">
                    Gerenciador de Tarefas
                 </a>
+                <a class="navbar-brand" href="{{ url('/nova_tarefa') }}">
+                    Nova Tarefa
+                 </a>
+                 <a class="navbar-brand" href="{{ url('/lista_tarefa') }}">
+                    Tarefas
+                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>

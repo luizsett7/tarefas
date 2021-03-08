@@ -21,6 +21,8 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::post('editar_tarefa/{id}', [TarefaController::class, 'editar_tarefa'])->name('editar_tarefa');
+
 Route::get('admin/home', [HomeController::class, 'adminHome'])->name('admin.home')->middleware('is_admin');
 
 Route::get('home', [HomeController::class, 'index'])->name('home');
@@ -34,4 +36,6 @@ Route::post('modal_tarefa', [TarefaController::class, 'modal_tarefa'])->name('mo
 Route::get('tarefa_colaborador/{id}', [TarefaController::class, 'tarefa_colaborador'])->name('tarefa_colaborador');
 
 Route::post('salvar_tarefa', [TarefaController::class, 'create'])->name('salvar_tarefa');
+
+Route::post('deletar', [TarefaController::class, 'deletar'])->name('deletar');
 

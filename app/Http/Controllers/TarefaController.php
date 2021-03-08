@@ -25,9 +25,18 @@ class TarefaController extends Controller
 
     public function modal_tarefa(Request $request)
     {
-
-        $tarefa = DB::table('tarefas')->where('id', $request->id_tarefa)->get();    
+        $colaborador = $request->id_colaborador;
+        $tarefa = DB::table('tarefas')
+        ->join('users', 'users.id' , '=', 'tarefas.dono_id')
+        ->select('tarefas.id', 'tarefas.titulo',  'tarefas.data', 'tarefas.status', 'users.id as user_id',  'users.name as colaborador')
+        ->where('users.id', '=', $colaborador)
+        ->get();
         return $tarefa;
+    }
+
+    public function deletar(Request $request){
+        $tarefa = Tarefa::find($request->id_tarefa);
+        $tarefa->delete();
     }
 
     public function tarefa_colaborador(Request $request, $id)
@@ -36,6 +45,12 @@ class TarefaController extends Controller
         $id_user = $request->route('id');
         $tarefas = DB::table('tarefas')->where('dono_id', $id)->simplePaginate(5);
         return view('tarefas.tarefa_colaborador')->with('tarefas', $tarefas)->with('users',$users)->with('id_user',$id_user);
+    }
+
+    public function editar_tarefa(Request $request, $id)
+    { 
+        $tarefa = Tarefa::find($request->route('id'));
+        return view('tarefas.editar_tarefa')->with('tarefa', $tarefa);
     }
 
     public function nova_tarefa(){

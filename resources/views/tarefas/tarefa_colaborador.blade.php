@@ -41,15 +41,15 @@
                                       </select>                                    
                                 </td>
                                 <td>
-                                    <select id="dono" name="dono_id" class="form-control" aria-label="Dono">          
+                                    <select id="dono_id" name="dono_id" class="form-control" aria-label="Dono">          
                                         @foreach ($users as $user)
                                             <option value="{{ $user->id }}" @if($user->id == $id_user) selected @endif>{{ $user->name }}</option>                                          
                                         @endforeach                                    
                                     </select>  
                                 </td>
-                                <td style="text-align: center"><a href="#" onclick="openModal('{{ $tarefa->id }}')"><i class="fas fa-info"></i></a></button></td>
-                                <td style="text-align: center"><i class="fas fa-pencil-alt"></i></td>
-                                <td style="text-align: center"><i class="far fa-trash-alt"></i></td>
+                                <td style="text-align: center"><a href="#" onclick="openModal('{{ $tarefa->id }}')"><i class="fas fa-info"></i></a></td>
+                                <td style="text-align: center"><a href="" onclick="alterar_tarefa('{{ $tarefa->id }}')"><i class="fas fa-pencil-alt"></i></a></td>
+                                <td style="text-align: center"><a href="#" onclick="deletar_tarefa('{{ $tarefa->id }}')"><i class="far fa-trash-alt"></i></a></td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -87,8 +87,39 @@
     $(document).ready(function(){
         $('select').on('change', function() {
             window.location.href = "http://localhost:8000/tarefa_colaborador/"+this.value;
-        });        
+        });              
     });
+    function alterar_tarefa(id_tarefa){
+        window.location.href = "http://localhost:8000/editar_tarefa/"+id_tarefa;
+    }
+    function deletar_tarefa(id_tarefa){  
+        Swal.fire({
+            title: 'Você está certo disso?',
+            text: "Tem certeza que deseja deletar?",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sim, tenho certeza!',
+            cancelButtonText: 'Sair'
+            }).then((result) => {
+                if (result.value) {
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+                    $.ajax({
+                    type:'POST',
+                    url:"{{ route('deletar') }}",
+                    data:{id_tarefa: id_tarefa},
+                    dataType: "text",           
+                    success:function(data){                            
+                    }
+                    });                
+                }
+                location.reload();
+        })        
+    }
     function openModal(id_tarefa){  
         $.ajaxSetup({
             headers: {
@@ -98,16 +129,15 @@
         $.ajax({
            type:'POST',
            url:"{{ route('modal_tarefa') }}",
-           data:{id_tarefa: id_tarefa, id_colaborador: $("#dono option:selected" ).text()},
+           data:{id_tarefa: id_tarefa, id_colaborador: $("#dono_id option:selected" ).val()},
            dataType: "text",           
-           success:function(data){  
-                data = JSON.parse(data);
-                console.log(data[0]);
+           success:function(data){ 
+                data = JSON.parse(data);                
                 $("#id_tarefa").text(data[0].id);
                 $("#titulo_tarefa").text(data[0].titulo);
                 $("#data_tarefa").text(data[0].data);
                 $("#status_tarefa").text(data[0].status);
-                $("#colaborador_tarefa").text(data[0].dono_id);
+                $("#colaborador_tarefa").text(data[0].colaborador);
            }
         });        
         $('#exampleModalCenter').modal();
