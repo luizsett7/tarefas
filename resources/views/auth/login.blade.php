@@ -59,13 +59,10 @@
 
                                 <button onclick="cadastrar()" class="btn btn-primary">
                                     {{ __('Registre-se') }}
-                                </button>
-
-                                @if (Route::has('password.request'))
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        {{ __('Forgot Your Password?') }}
+                                </button>                                                            
+                                    <a class="btn btn-link" href="#" onclick="recuperar_senha()">
+                                        {{ __('Esqueceu sua senha?') }}
                                     </a>
-                                @endif
                             </div>
                         </div>
                     </form>
@@ -77,6 +74,9 @@
 <script>
     function cadastrar(){
         window.location.href = "http://localhost:8000/register";
+    }
+    function recuperar_senha(){
+        window.location.href = "http://localhost:8000/recuperar";
     }
 </script>
 @endsection

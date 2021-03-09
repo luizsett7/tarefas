@@ -46,3 +46,7 @@ Route::post('salvar_tarefa', [TarefaController::class, 'create'])->name('salvar_
 
 Route::post('deletar', [TarefaController::class, 'deletar'])->name('deletar');
 
+Route::get('recuperar', [HomeController::class, 'recuperar'])->name('recuperar');
+
+Route::post('enviar_email', [HomeController::class, 'enviar_email'])->name('enviar_email');
+
