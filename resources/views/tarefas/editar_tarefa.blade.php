@@ -67,10 +67,10 @@
 
                                 <div class="col-md-6">
                                     <select id="status" name="status" class="form-control" aria-label="Status">
-                                        <option value="Aberta" @if ($tarefa->status == "aberta") selected @endif>Aberta</option>
-                                        <option value="Desenvolvimento" @if ($tarefa->status == "desenvolvimento") selected @endif>Desenvolvimento</option>
-                                        <option value="Concluída" @if ($tarefa->status == "concluída") selected @endif>Concluída</option>
-                                        <option value="Em atraso" @if ($tarefa->status == "em atraso") selected @endif>Em atraso</option>
+                                        <option value="Aberta" @if ($tarefa->status == "Aberta") selected @endif>Aberta</option>
+                                        <option value="Desenvolvimento" @if ($tarefa->status == "Desenvolvimento") selected @endif>Desenvolvimento</option>
+                                        <option value="Concluída" @if ($tarefa->status == "Concluída") selected @endif>Concluída</option>
+                                        <option value="Em atraso" @if ($tarefa->status == "Em atraso") selected @endif>Em atraso</option>
                                     </select>
                                     @error('status')
                                     <span class="invalid-feedback" role="alert">

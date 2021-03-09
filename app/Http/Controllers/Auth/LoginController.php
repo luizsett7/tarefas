@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Auth;
 
 class LoginController extends Controller
 {
@@ -48,13 +49,8 @@ class LoginController extends Controller
             'password' => 'required',
         ]);
 
-        if(auth()->attempt(array('email' => $input['email'], 'password' => $input['password'])))
-        {
-            if (auth()->user()->is_admin == 1) {
-                return redirect()->route('lista_tarefa');
-            }else{
-                return redirect()->route('lista_tarefa');
-            }
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
+            return redirect()->route('lista_tarefa');                            
         }else{
             return redirect()->route('login')
                 ->with('error','Email-Address And Password Are Wrong.');

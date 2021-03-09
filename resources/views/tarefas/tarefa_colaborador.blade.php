@@ -34,10 +34,10 @@
                                 <td>{{ $tarefa->data }}</td>
                                 <td>
                                     <select id="status" name="status" class="form-control" aria-label="Status">                                        
-                                        <option value="Aberta" @if ($tarefa->status == "aberta") selected @endif>Aberta</option>
-                                        <option value="Desenvolvimento" @if ($tarefa->status == "desenvolvimento") selected @endif>Desenvolvimento</option>
-                                        <option value="Concluída" @if ($tarefa->status == "concluída") selected @endif>Concluída</option>
-                                        <option value="Em atraso" @if ($tarefa->status == "em atraso") selected @endif>Em atraso</option>
+                                        <option value="Aberta" @if ($tarefa->status == "Aberta") selected @endif>Aberta</option>
+                                        <option value="Desenvolvimento" @if ($tarefa->status == "Desenvolvimento") selected @endif>Desenvolvimento</option>
+                                        <option value="Concluída" @if ($tarefa->status == "Concluída") selected @endif>Concluída</option>
+                                        <option value="Em atraso" @if ($tarefa->status == "Em atraso") selected @endif>Em atraso</option>
                                       </select>                                    
                                 </td>
                                 <td>
@@ -90,7 +90,8 @@
         });              
     });
     function alterar_tarefa(id_tarefa){ 
-        window.location.href = "http://localhost:8000/editar_tarefa/"+id_tarefa;
+        let id_user = $('select[name=dono_id] option').filter(':selected').val();  
+        window.location.href = "http://localhost:8000/editar_tarefa/"+id_tarefa+"/"+id_user;
     };       
     function deletar_tarefa(id_tarefa){  
         Swal.fire({

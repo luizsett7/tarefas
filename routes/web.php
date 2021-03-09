@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TarefaController;
+use App\Http\Controllers\Auth\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,18 +17,22 @@ use App\Http\Controllers\TarefaController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
+});
+
+Route::get('/home', function () {
+    return redirect()->route('lista_tarefa');
 });
 
 Auth::routes();
 
-Route::get('admin/home', [HomeController::class, 'adminHome'])->name('admin.home')->middleware('is_admin');
-
-Route::get('home', [HomeController::class, 'index'])->name('home');
-
 Route::get('nova_tarefa', [TarefaController::class, 'nova_tarefa'])->name('nova_tarefa');
 
-Route::get('editar_tarefa/{id}', [TarefaController::class, 'editar_tarefa'])->name('editar_tarefa');
+Route::get('editar_tarefa/{id}/{id_user}', [TarefaController::class, 'editar_tarefa'])->name('editar_tarefa');
+
+Route::get('editar_cadastro', [HomeController::class, 'editar_cadastro'])->name('editar_cadastro');
+
+Route::post('update_cadastro', [HomeController::class, 'update_cadastro'])->name('update_cadastro');
 
 Route::post('update/{id}', [TarefaController::class, 'update'])->name('update');
 

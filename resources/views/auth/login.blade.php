@@ -57,8 +57,8 @@
                                     {{ __('Entrar') }}
                                 </button>
 
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Cadastrar') }}
+                                <button onclick="cadastrar()" class="btn btn-primary">
+                                    {{ __('Registre-se') }}
                                 </button>
 
                                 @if (Route::has('password.request'))
@@ -74,4 +74,9 @@
         </div>
     </div>
 </div>
+<script>
+    function cadastrar(){
+        window.location.href = "http://localhost:8000/register";
+    }
+</script>
 @endsection
