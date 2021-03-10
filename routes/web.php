@@ -52,3 +52,4 @@ Route::post('enviar_email', [HomeController::class, 'enviar_email'])->name('envi
 
 Route::get('retorno_email', [HomeController::class, 'retorno_email'])->name('retorno_email');
 
+Route::post('alterar_status', [TarefaController::class, 'alterar_status'])->name('alterar_status');

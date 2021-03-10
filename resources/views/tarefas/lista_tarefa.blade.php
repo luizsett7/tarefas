@@ -40,6 +40,7 @@
                                         <option value="Em atraso" @if ($tarefa->status == "Em atraso") selected @endif>Em atraso</option>
                                       </select>                                    
                                 </td>
+                                <input type="hidden" id="tarefa" name="tarefa" value="{{ $tarefa->id }}" />
                                 <td>
                                     <select id="dono_id" name="dono_id" class="form-control" aria-label="Dono">          
                                         @foreach ($users as $user)
@@ -87,6 +88,25 @@
     $(document).ready(function(){
         $('#dono_id').on('change', function() {            
             window.location.href = "http://localhost:8000/tarefa_colaborador/"+this.value;
+        });   
+        $('#status').on('change', function() {            
+                $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+                });
+                $.ajax({
+                type:'POST',
+                url:"{{ route('alterar_status') }}",
+                data:{status: this.value, id_tarefa: $("#tarefa" ).val()},
+                dataType: "text",           
+                success:function(data){                         
+                    Swal.fire(
+                    'Status Alterado com sucesso!',
+                    'success'
+                    )
+                }
+                });   
         });              
     });
     function alterar_tarefa(id_tarefa){      

@@ -104,6 +104,20 @@ class TarefaController extends Controller
         }
     }
 
+    public function alterar_status(Request $request){
+        try {
+            if (Auth::check()) {
+                Tarefa::where('id', $request->id_tarefa)
+                ->update(['status' => $request->status]);
+                return view('tarefas.lista_tarefa');
+            }else{
+                return view('auth.login');
+            }
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            return view('excecao')->with('excecao',$ex->getMessage());          
+        }
+    }
+
     /**
      * Show the form for creating a new resource.
      *
