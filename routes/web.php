@@ -50,3 +50,5 @@ Route::get('recuperar', [HomeController::class, 'recuperar'])->name('recuperar')
 
 Route::post('enviar_email', [HomeController::class, 'enviar_email'])->name('enviar_email');
 
+Route::get('retorno_email', [HomeController::class, 'retorno_email'])->name('retorno_email');
+

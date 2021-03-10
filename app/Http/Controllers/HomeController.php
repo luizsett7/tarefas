@@ -72,16 +72,25 @@ class HomeController extends Controller
                 $senha = Hash::make($senha_temporaria);
                 User::where('cpf', $request->cpf)
                 ->update(['password' => $senha]);
-                Mail::send(['text'=>'email'], $data, function($message) {
-                    $message->to('luizsett7@gmail.com', 'Tutorials Point')->subject
-                        ('Laravel Basic Testing Mail');
-                    $message->from('luizsett7@gmail.com','Virat Gandhi');
-                });
+                try{
+                    Mail::send(['text'=>'email'], $data, function($message) use ($user) {
+                        $message->to($user->email, $user->name)->subject('Nova senha de acesso');
+                        $message->from('tarefas@gmail.com','Tarefas');
+                    });
+                    return redirect()->route('retorno_email');
+                } catch(\Swift_TransportException $ex){
+                    return view('excecao')->with('excecao',$ex->getMessage());
+                }
             }else{
                 return view('excecao')->with('excecao',"Usuário não existe"); 
             }       
         } catch(\Illuminate\Database\QueryException $ex){ 
             return view('excecao')->with('excecao',$ex->getMessage());          
         }
+    }
+
+    public function retorno_email()
+    {
+        return view('retorno_email');
     }
 }
