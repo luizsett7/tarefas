@@ -62,6 +62,7 @@
                                     @enderror
                                 </div>
                             </div>
+                            <input type="hidden" name="pai_id" id="pai_id" value="{{ Auth::user()->id }}" />
                             <div class="form-group row">
                                 <label for="status" class="col-md-4 col-form-label text-md-right">{{ __('Status') }}</label>
 

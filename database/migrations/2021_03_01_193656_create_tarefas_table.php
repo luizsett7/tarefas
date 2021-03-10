@@ -19,6 +19,7 @@ class CreateTarefasTable extends Migration
             $table->date('data');
             $table->unsignedBigInteger('dono_id');
             $table->foreign('dono_id')->references('id')->on('users');
+            $table->unsignedBigInteger('pai_id');            
             $table->text('descricao');
             $table->string('status');
             $table->timestamps();

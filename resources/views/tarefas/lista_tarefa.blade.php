@@ -12,7 +12,7 @@
                     <div class="card-header">{{ __('Tarefas') }}</div>
 
                     <div class="card-body">
-                        Tarefas do Colaborador: {{ Auth::user()->name }}
+                        Tarefas do Colaborador <b>{{ Auth::user()->name }}</b>
                     <table class="table">
                         <thead>
                         <tr>
@@ -44,7 +44,7 @@
                                 <td>
                                     <select id="dono_id" name="dono_id" class="form-control" aria-label="Dono">          
                                         @foreach ($users as $user)
-                                            <option value="{{ $user->id }}" @if($user->id == Auth::user()->id) selected @endif>{{ $user->name }}</option>                                          
+                                            <option value="{{ $user->id }}" @if($user->id == $tarefa->dono_id) selected @endif>{{ $user->name }}</option>                                          
                                         @endforeach                                    
                                     </select>  
                                 </td>
@@ -78,8 +78,25 @@
             Colaborador: <span id="colaborador_tarefa"></span>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>          
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Erro</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+           Desculpe mas não foi possível atender a requisição.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>          
         </div>
       </div>
     </div>
@@ -103,8 +120,10 @@
                 success:function(data){                         
                     Swal.fire(
                     'Status Alterado com sucesso!',
-                    'success'
                     )
+                },
+                error: function (request, status, error) {
+                        $('#errorModal').modal();
                 }
                 });   
         });              
@@ -135,10 +154,13 @@
                     data:{id_tarefa: id_tarefa},
                     dataType: "text",           
                     success:function(data){                            
+                        location.reload();
+                    },
+                    error: function (request, status, error) {
+                        $('#errorModal').modal();
                     }
                     });                
-                }
-                location.reload();
+                }                
         })        
     }
     function openModal(id_tarefa){  
@@ -159,9 +181,12 @@
                 $("#data_tarefa").text(data[0].data);
                 $("#status_tarefa").text(data[0].status);
                 $("#colaborador_tarefa").text(data[0].colaborador);
-           }
-        });        
-        $('#exampleModalCenter').modal();
+                $('#exampleModalCenter').modal();
+           },
+           error: function (request, status, error) {
+                $('#errorModal').modal();
+            }
+        });                
     }  
 </script>
 @endsection

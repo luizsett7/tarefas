@@ -30,9 +30,15 @@
                 <a class="navbar-brand" href="{{ url('/') }}">
                    Gerenciador de Tarefas
                 </a>
+                <span>&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <a class="navbar-brand" href="{{ url('/') }}">
+                    Listar Tarefas
+                 </a>
+                 <span>&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                 <a class="navbar-brand" href="{{ url('/nova_tarefa') }}">
                     Nova Tarefa
                  </a>
+                 <span>&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                  <a class="navbar-brand" href="{{ url('/editar_cadastro') }}">
                     Editar Cadastro
                  </a>

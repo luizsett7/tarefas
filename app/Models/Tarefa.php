@@ -13,6 +13,7 @@ class Tarefa extends Model
         'titulo',
         'data',
         'dono_id',
+        'pai_id',
         'descricao',
         'status',
     ];

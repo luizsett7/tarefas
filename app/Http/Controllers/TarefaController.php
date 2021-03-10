@@ -8,6 +8,8 @@ use App\Models\User;
 use App\Models\Tarefa;
 use Illuminate\Support\Facades\DB;
 use Auth;
+use Redirect;
+use Session;
 
 class TarefaController extends Controller
 {
@@ -68,9 +70,13 @@ class TarefaController extends Controller
         try {
             if (Auth::check()) {
                 $users = User::all();  
-                $id_user = $request->route('id');
-                $tarefas = DB::table('tarefas')->where('dono_id', $id)->simplePaginate(5);
-                return view('tarefas.tarefa_colaborador')->with('tarefas', $tarefas)->with('users',$users)->with('id_user',$id_user);
+                $id_user = $request->route('id'); 
+                $usuario = User::find($id_user);  
+                if(Auth::user()->id == $id_user){                    
+                    return redirect()->route('lista_tarefa'); 
+                }                        
+                $tarefas = DB::table('tarefas')->where('pai_id', Auth::user()->id)->where('dono_id', '=', $id_user)->simplePaginate(5);                
+                return view('tarefas.tarefa_colaborador')->with('tarefas', $tarefas)->with('users',$users)->with('id_user',$id_user)->with('usuario',$usuario);
             }else{
                 return view('auth.login');
             }
@@ -107,9 +113,7 @@ class TarefaController extends Controller
     public function alterar_status(Request $request){
         try {
             if (Auth::check()) {
-                Tarefa::where('id', $request->id_tarefa)
-                ->update(['status' => $request->status]);
-                return view('tarefas.lista_tarefa');
+                Tarefa::where('id', $request->id_tarefa)->update(['status' => $request->status]);                
             }else{
                 return view('auth.login');
             }
@@ -125,8 +129,16 @@ class TarefaController extends Controller
      */
     public function create(TarefaRequest $request)
     {
-        Tarefa::create($request->all());
-        return redirect()->route('lista_tarefa');
+        try {
+            if (Auth::check()) {
+                Tarefa::create($request->all());
+                return redirect()->route('lista_tarefa');
+            }else{
+                return view('auth.login');
+            }    
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            return view('excecao')->with('excecao',$ex->getMessage());          
+        }    
     }
 
     /**
@@ -171,8 +183,16 @@ class TarefaController extends Controller
      */
     public function update(TarefaRequest $request, $id)
     {
-        Tarefa::find($id)->update($request->all());
-        return redirect()->route('lista_tarefa');
+        try {
+            if (Auth::check()) {
+                Tarefa::find($id)->update($request->all());
+                return redirect()->route('lista_tarefa');
+            }else{
+                return view('auth.login');
+            }      
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            return view('excecao')->with('excecao',$ex->getMessage());          
+        } 
     }
 
     /**
