@@ -49,11 +49,10 @@ class LoginController extends Controller
             'password' => 'required',
         ]);
 
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {           
             return redirect()->route('lista_tarefa');                            
         }else{
-            return redirect()->route('login')
-                ->with('error','Email-Address And Password Are Wrong.');
+            return view('auth.login')->with('excecao','Dados inválidos, por favor preencha novamente');
         }
 
     }

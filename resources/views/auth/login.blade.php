@@ -10,7 +10,11 @@
                 <div class="card-body">
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
-
+                        @isset($excecao)
+                        <div style="text-align: center;">
+                            <h5 style="margin-left: 60px;">{{ $excecao }}</h5>
+                        </div>
+                        @endisset                        
                         <div class="form-group row">
                             <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
 
@@ -64,7 +68,7 @@
                                         {{ __('Esqueceu sua senha?') }}
                                     </a>
                             </div>
-                        </div>
+                        </div>                       
                     </form>
                 </div>
             </div>
