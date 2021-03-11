@@ -90,10 +90,12 @@
                 </div>
             </div>
         </nav>
-
         <main class="py-4">
             @yield('content')
         </main>
-    </div>    
+    </div>   
+    <script>
+        $('.date').mask('00/00/0000');
+    </script> 
 </body>
 </html>

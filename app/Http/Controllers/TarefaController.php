@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Auth;
 use Redirect;
 use Session;
+use Carbon\Carbon;
 
 class TarefaController extends Controller
 {
@@ -40,8 +41,8 @@ class TarefaController extends Controller
                 $colaborador = $request->id_colaborador;
                 $tarefa = DB::table('tarefas')
                 ->join('users', 'users.id' , '=', 'tarefas.dono_id')
-                ->select('tarefas.id', 'tarefas.titulo',  'tarefas.data', 'tarefas.status', 'users.id as user_id',  'users.name as colaborador')
-                ->where('users.id', '=', $colaborador)
+                ->select('tarefas.id', 'tarefas.titulo',  'tarefas.data', 'tarefas.status', 'tarefas.descricao', 'users.id as user_id', 'users.name as colaborador')
+                ->where('users.id', '=', $colaborador)->where('tarefas.id', '=', $request->id_tarefa)
                 ->get();
                 return $tarefa;
             }else{
@@ -75,7 +76,7 @@ class TarefaController extends Controller
                 if(Auth::user()->id == $id_user){                    
                     return redirect()->route('lista_tarefa'); 
                 }                        
-                $tarefas = DB::table('tarefas')->where('pai_id', Auth::user()->id)->where('dono_id', '=', $id_user)->simplePaginate(5);                
+                $tarefas = DB::table('tarefas')->where('pai_id', Auth::user()->id)->where('dono_id', '=', $id_user)->simplePaginate(5);                                
                 return view('tarefas.tarefa_colaborador')->with('tarefas', $tarefas)->with('users',$users)->with('id_user',$id_user)->with('usuario',$usuario);
             }else{
                 return view('auth.login');
@@ -112,8 +113,8 @@ class TarefaController extends Controller
 
     public function alterar_status(Request $request){
         try {
-            if (Auth::check()) {
-                Tarefa::where('id', $request->id_tarefa)->update(['status' => $request->status]);                
+            if (Auth::check()) {                
+                $tarefa = Tarefa::where('id', $request->id_tarefa)->update(['status' => $request->status]);                
             }else{
                 return view('auth.login');
             }
@@ -130,8 +131,17 @@ class TarefaController extends Controller
     public function create(TarefaRequest $request)
     {
         try {
-            if (Auth::check()) {
-                Tarefa::create($request->all());
+            if (Auth::check()) {                                 
+                $data_request = strtr($request->data, '/', '-');
+                $data = date('Y-m-d', strtotime($data_request)); 
+                Tarefa::create([
+                    'titulo' => $request->titulo,
+                    'data' => $data,
+                    'dono_id' => $request->dono_id,
+                    'pai_id' => $request->pai_id,
+                    'status' => $request->status,
+                    'descricao' => $request->descricao,
+                ]);                               
                 return redirect()->route('lista_tarefa');
             }else{
                 return view('auth.login');
@@ -181,12 +191,25 @@ class TarefaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(TarefaRequest $request, $id)
+    public function update(TarefaRequest $request, $id, $id_user)
     {
         try {
             if (Auth::check()) {
-                Tarefa::find($id)->update($request->all());
-                return redirect()->route('lista_tarefa');
+                $data_request = strtr($request->data, '/', '-');
+                $data = date('Y-m-d', strtotime($data_request));                
+                Tarefa::find($id)->update([
+                    'titulo' => $request->titulo,
+                    'data' => $data,
+                    'dono_id' => $request->dono_id,
+                    'pai_id' => $request->pai_id,
+                    'status' => $request->status,
+                    'descricao' => $request->descricao,
+                ]);
+                if($id_user == Auth::user()->id){
+                    return redirect()->route('lista_tarefa');                     
+                }else{
+                    return redirect("tarefa_colaborador/$id_user");                              
+                }
             }else{
                 return view('auth.login');
             }      

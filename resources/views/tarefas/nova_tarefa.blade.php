@@ -34,7 +34,7 @@
 
                                 <div class="col-md-6">
                                     <input id="data" type="data"
-                                           class="form-control @error('data') is-invalid @enderror" name="data"
+                                           class="date form-control @error('data') is-invalid @enderror" name="data"
                                            value="{{ old('data') }}" required autocomplete="data">
 
                                     @error('data')

@@ -34,7 +34,7 @@ Route::get('editar_cadastro', [HomeController::class, 'editar_cadastro'])->name(
 
 Route::post('update_cadastro', [HomeController::class, 'update_cadastro'])->name('update_cadastro');
 
-Route::post('update/{id}', [TarefaController::class, 'update'])->name('update');
+Route::post('update/{id}/{id_user}', [TarefaController::class, 'update'])->name('update');
 
 Route::get('lista_tarefa', [TarefaController::class, 'index'])->name('lista_tarefa');
 

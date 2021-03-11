@@ -27,21 +27,22 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach ($tarefas as $tarefa)                             
+                        @forelse ($tarefas as $tarefa)                                                     
                             <tr>
                                 <th scope="row">{{ $tarefa->id }}</th>
                                 <td>{{ $tarefa->titulo }}</td>
-                                <td>{{ $tarefa->data }}</td>
+                                <td>{{ \Carbon\Carbon::parse($tarefa->data)->format('d/m/Y')}}</td>
                                 <td>
-                                    <select id="status" name="status" class="form-control" aria-label="Status">                                        
+                                    <select id="status" name="status" class="status+{{ $tarefa->id }} select-status form-control" aria-label="Status">                                        
                                         <option value="Aberta" @if ($tarefa->status == "Aberta") selected @endif>Aberta</option>
                                         <option value="Desenvolvimento" @if ($tarefa->status == "Desenvolvimento") selected @endif>Desenvolvimento</option>
                                         <option value="Concluída" @if ($tarefa->status == "Concluída") selected @endif>Concluída</option>
                                         <option value="Em atraso" @if ($tarefa->status == "Em atraso") selected @endif>Em atraso</option>
                                       </select>                                    
                                 </td>
+                                <input type="hidden" id="tarefa+{{ $tarefa->id }}" name="tarefa" value="{{ $tarefa->id }}" />
                                 <td>
-                                    <select id="dono_id" name="dono_id" class="form-control" aria-label="Dono">          
+                                    <select id="dono_id" name="dono_id" class="dono_id form-control" aria-label="Dono">          
                                         @foreach ($users as $user)
                                             <option value="{{ $user->id }}" @if($user->id == $id_user) selected @endif>{{ $user->name }}</option>                                          
                                         @endforeach                                    
@@ -51,7 +52,9 @@
                                 <td style="text-align: center"><a href="#" onclick="alterar_tarefa('{{ $tarefa->id }}')"><i class="fas fa-pencil-alt"></i></a></td>
                                 <td style="text-align: center"><a href="#" onclick="deletar_tarefa('{{ $tarefa->id }}')"><i class="far fa-trash-alt"></i></a></td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <div style="float: right; margin-right: 30px;"><span style="font-size: 20px; font-weight: bold; float: left;">Lista Vazia</span><a style="font-size: 20px; float: left; margin-left: 10px;" href="/lista_tarefa">Voltar</a></div>                        
+                        @endforelse
                         </tbody>
                     </table>    
                     {{ $tarefas->links() }}                  
@@ -74,7 +77,8 @@
             Título: <span id="titulo_tarefa"></span><br />
             Data: <span id="data_tarefa"></span><br />
             Status: <span id="status_tarefa"></span><br />
-            Colaborador: <span id="colaborador_tarefa"></span>
+            Colaborador: <span id="colaborador_tarefa"></span><br />
+            Descrição: <span id="descricao_tarefa"></span>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>          
@@ -102,10 +106,13 @@
   </div>
   <script>
     $(document).ready(function(){
-        $('#dono_id').on('change', function() {            
+        $('.dono_id').on('change', function() {            
             window.location.href = "http://localhost:8000/tarefa_colaborador/"+this.value;
-        });   
-        $('#status').on('change', function() {            
+        });                         
+    });    
+    $('.select-status').on('change', function() {                  
+        id = $(this).attr('class');
+        result = id.substring(7,9);
                 $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -114,7 +121,7 @@
                 $.ajax({
                 type:'POST',
                 url:"{{ route('alterar_status') }}",
-                data:{status: this.value, id_tarefa: $("#tarefa" ).val()},
+                data:{status: this.value, id_tarefa: result},
                 dataType: "text",           
                 success:function(data){                         
                     Swal.fire(
@@ -125,8 +132,7 @@
                         $('#errorModal').modal();
                 }
                 });   
-        });              
-    });
+        });        
     function alterar_tarefa(id_tarefa){      
         let id_user = $('select[name=dono_id] option').filter(':selected').val();  
         window.location.href = "http://localhost:8000/editar_tarefa/"+id_tarefa+"/"+id_user;
@@ -162,24 +168,27 @@
                 }                
         })        
     }
-    function openModal(id_tarefa){  
+    function openModal(id_tarefa){         
         $.ajaxSetup({
             headers: {
                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
               }
-        });
+        });        
         $.ajax({
            type:'POST',
            url:"{{ route('modal_tarefa') }}",
-           data:{id_tarefa: id_tarefa, id_colaborador: $("#dono_id option:selected" ).val()},
+           data:{id_tarefa: id_tarefa, id_colaborador: $(".dono_id option:selected" ).val()},
            dataType: "text",           
            success:function(data){ 
                 data = JSON.parse(data);                
                 $("#id_tarefa").text(data[0].id);
                 $("#titulo_tarefa").text(data[0].titulo);
-                $("#data_tarefa").text(data[0].data);
+                let date = new Date(data[0].data);
+                let dataFormatada = ((date.getDate() + 1)) + "/" + ((date.getMonth() + 1)) + "/" + date.getFullYear(); 
+                $("#data_tarefa").text(dataFormatada);
                 $("#status_tarefa").text(data[0].status);
                 $("#colaborador_tarefa").text(data[0].colaborador);
+                $("#descricao_tarefa").text(data[0].descricao);
                 $('#exampleModalCenter').modal();
            },
            error: function (request, status, error) {

@@ -8,7 +8,7 @@
                     <div class="card-header">{{ __('Tarefas') }}</div>
 
                     <div class="card-body">
-                        <form method="POST" action="/update/{{ $tarefa->id }}">
+                        <form method="POST" action="/update/{{ $tarefa->id }}/{{ $id_user}}">
                             @csrf
 
                             <div class="form-group row">
@@ -34,8 +34,8 @@
 
                                 <div class="col-md-6">
                                     <input id="data" type="data"
-                                           class="form-control @error('data') is-invalid @enderror" name="data"
-                                           value="{{ $tarefa->data }}" required autocomplete="data">
+                                           class="date form-control @error('data') is-invalid @enderror" name="data"
+                                           value="{{ \Carbon\Carbon::parse($tarefa->data)->format('d/m/Y')}}" required autocomplete="data">
 
                                     @error('data')
                                     <span class="invalid-feedback" role="alert">
@@ -62,6 +62,7 @@
                                     @enderror
                                 </div>
                             </div>
+                            <input type="hidden" name="pai_id" id="pai_id" value="{{ Auth::user()->id }}" />
                             <div class="form-group row">
                                 <label for="status" class="col-md-4 col-form-label text-md-right">{{ __('Status') }}</label>
 
