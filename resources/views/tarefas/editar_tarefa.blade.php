@@ -36,7 +36,7 @@
                                     <input id="data" type="data"
                                            class="date form-control @error('data') is-invalid @enderror" name="data" onfocusout="verifica_data()"
                                            value="{{ \Carbon\Carbon::parse($tarefa->data)->format('d/m/Y')}}" required autocomplete="data">
-                                           
+
                                     <span class="invalid-feedback" id="data-invalida" style="display: none;" role="alert">
                                             <strong>Data inválida</strong>
                                     </span>
@@ -119,6 +119,7 @@
             if(dateRegex.test($("#data").val()) === false){                
                 $("#data-invalida").show();
                 $("#data").val("");
+                $("#data").focus();
             }else{
                 $("#data-invalida").hide();
             }

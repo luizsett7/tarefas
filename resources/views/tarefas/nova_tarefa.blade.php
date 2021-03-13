@@ -119,6 +119,7 @@
             if(dateRegex.test($("#data").val()) === false){                
                 $("#data-invalida").show();
                 $("#data").val("");
+                $("#data").focus();
             }else{
                 $("#data-invalida").hide();
             }
