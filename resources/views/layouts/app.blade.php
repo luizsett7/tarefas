@@ -27,13 +27,26 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
+                @if(@isset(Auth::user()->id))
+                <a class="navbar-brand" href="{{ url('/lista_tarefa/'.Auth::user()->id) }}">
                    Gerenciador de Tarefas
-                </a>
+                </a>     
+                @else 
+                    <a class="navbar-brand" href="{{ url('/') }}">
+                        Gerenciador de Tarefas
+                     </a>
+                @endif
+                @if(@isset(Auth::user()->id))
                 <span>&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                <a class="navbar-brand" href="{{ url('/') }}">
+                <a class="navbar-brand" href="{{ url('/lista_tarefa/'.Auth::user()->id) }}">
                     Listar Tarefas
                  </a>
+                 @else
+                 <span>&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                 <a class="navbar-brand" href="{{ url('/') }}">
+                    Listar Tarefas
+                 </a>
+                 @endif
                  <span>&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                 <a class="navbar-brand" href="{{ url('/nova_tarefa') }}">
                     Nova Tarefa

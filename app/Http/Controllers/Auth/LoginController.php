@@ -41,19 +41,17 @@ class LoginController extends Controller
     }
 
     public function login(Request $request)
-    {
-        $input = $request->all();
-
+    {            
         $this->validate($request, [
             'email' => 'required|email',
             'password' => 'required',
-        ]);
-
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {           
-            return redirect()->route('lista_tarefa');                            
-        }else{
-            return view('auth.login')->with('excecao','Dados inválidos, por favor preencha novamente');
-        }
+        ]);        
+            if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {                       
+                return redirect('lista_tarefa/'.Auth::user()->id);     
+            }else{
+                return view('auth.login')->with('excecao','Dados inválidos, por favor preencha novamente');
+            }
+        
 
     }
 }

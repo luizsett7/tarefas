@@ -12,7 +12,11 @@
                     <div class="card-header">{{ __('Tarefas') }}</div>
 
                     <div class="card-body">
-                        Tarefas do Colaborador <b>{{ Auth::user()->name }}</b>
+                        @if(@isset($usuario->name))
+                            Tarefas do colaborador <b>{{ $usuario->name }}</b> vinculadas ao colaborador <b>{{ Auth::user()->name }}</b>
+                        @else
+                            Tarefas do Colaborador <b>{{ Auth::user()->name }}</b>
+                        @endif                        
                     <table class="table" id="table">
                         <thead>
                         <tr>
@@ -63,6 +67,37 @@
         </div>
     </div>    
 </div>
+<script>
+$(document).ready(function(){
+    termo = window.location.search;    
+    termo = termo.substring(9,13);
+    if(termo == "true"){      
+        $("#mensagem_sucesso").modal();
+    }
+    $('#mensagem_sucesso').on('hidden.bs.modal', function () {        
+        var url = window.location.protocol + "//" + window.location.host + window.location.pathname;        
+        window.location.href = url;     
+    });
+});
+</script>
+<div class="modal fade" id="mensagem_sucesso" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Aviso</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+           Operação realizada com sucesso.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>          
+        </div>
+      </div>
+    </div>
+  </div>
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
@@ -106,8 +141,8 @@
   </div>
   <script>
     $(document).ready(function(){
-        $('.dono_id').on('change', function() {            
-            window.location.href = "http://localhost:8000/tarefa_colaborador/"+this.value;
+        $('.dono_id').on('change', function() {
+            window.location.href = "http://localhost:8000/lista_tarefa/"+this.value+"?success=true";                          
         });                         
     });    
     $('.select-status').on('change', function() {                  
@@ -158,8 +193,13 @@
                     url:"{{ route('deletar') }}",
                     data:{id_tarefa: id_tarefa},
                     dataType: "text",           
-                    success:function(data){                            
-                        location.reload();
+                    success:function(data){
+                        Swal.fire({
+                            title: 'Tarefa apagada com sucesso!',
+                            confirmButtonText: `Ok`,
+                            }).then((result) => {
+                                location.reload();
+                        })                                                                                          
                     },
                     error: function (request, status, error) {
                         $('#errorModal').modal();

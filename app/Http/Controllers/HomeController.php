@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Auth;
 use Mail;
+use Redirect;
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
@@ -48,7 +49,7 @@ class HomeController extends Controller
                         'telefone' => $request['telefone'],
                         'password' => Hash::make($request['password'])]
                 );
-                return redirect()->route('lista_tarefa');
+                return redirect('lista_tarefa/'.Auth::user()->id."?success=true"); 
             }else{
                 return view('auth.login');
             }

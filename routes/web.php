@@ -21,7 +21,7 @@ Route::get('/', function () {
 });
 
 Route::get('/home', function () {
-    return redirect()->route('lista_tarefa');
+    return redirect("lista_tarefa/".Auth::user()->id);     
 });
 
 Auth::routes();
@@ -36,7 +36,7 @@ Route::post('update_cadastro', [HomeController::class, 'update_cadastro'])->name
 
 Route::post('update/{id}/{id_user}', [TarefaController::class, 'update'])->name('update');
 
-Route::get('lista_tarefa', [TarefaController::class, 'index'])->name('lista_tarefa');
+Route::get('lista_tarefa/{id}', [TarefaController::class, 'index'])->name('lista_tarefa');
 
 Route::post('modal_tarefa', [TarefaController::class, 'modal_tarefa'])->name('modal_tarefa');
 

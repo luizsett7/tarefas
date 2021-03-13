@@ -35,8 +35,11 @@
                                 <div class="col-md-6">
                                     <input id="data" type="data"
                                            class="date form-control @error('data') is-invalid @enderror" name="data"
-                                           value="{{ old('data') }}" required autocomplete="data">
+                                           value="{{ old('data') }}" onfocusout="verifica_data()" required autocomplete="data">
 
+                                    <span class="invalid-feedback" id="data-invalida" style="display: none;" role="alert">
+                                            <strong>Data inválida</strong>
+                                    </span>
                                     @error('data')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -110,4 +113,15 @@
             </div>
         </div>
     </div>
+    <script>
+        function verifica_data(){            
+            var dateRegex = /^(?=\d)(?:(?:31(?!.(?:0?[2469]|11))|(?:30|29)(?!.0?2)|29(?=.0?2.(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00)))(?:\x20|$))|(?:2[0-8]|1\d|0?[1-9]))([-.\/])(?:1[012]|0?[1-9])\1(?:1[6-9]|[2-9]\d)?\d\d(?:(?=\x20\d)\x20|$))?(((0?[1-9]|1[012])(:[0-5]\d){0,2}(\x20[AP]M))|([01]\d|2[0-3])(:[0-5]\d){1,2})?$/;
+            if(dateRegex.test($("#data").val()) === false){                
+                $("#data-invalida").show();
+                $("#data").val("");
+            }else{
+                $("#data-invalida").hide();
+            }
+        }
+    </script>
 @endsection
